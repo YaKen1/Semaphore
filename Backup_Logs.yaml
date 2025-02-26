@@ -1,0 +1,29 @@
+- name: Backup logs from the last hour
+  hosts: all
+  become: yes
+  tasks:
+    - name: Get current timestamp
+      command: date +"%Y_%m_%d_%H"
+      register: timestamp
+      changed_when: false
+
+    - name: Find log files modified in the last hour
+      find:
+        paths: "/var/log"
+        age: "1h"
+        age_stamp: "mtime"
+      register: logs_to_backup
+
+    - name: Create backup directory if not exists
+      file:
+        path: "/var/log/backups"
+        state: directory
+        mode: "0755"
+
+    - name: Archive logs
+      archive:
+        path: "{{ item.path }}"
+        dest: "/var/log/backups/logs_backup_{{ timestamp.stdout }}.tar.gz"
+        format: gz
+      with_items: "{{ logs_to_backup.files }}"
+      when: logs_to_backup.matched > 0
