@@ -1,14 +1,13 @@
-- name: Create a test file with timestamp
-  hosts: all
-  become: yes
+- hosts: web_servers
+  become: true
   tasks:
-    - name: Get current timestamp
-      ansible.builtin.command: date +"%Y%m%d_%H%M%S"
-      register: timestamp
-      changed_when: false
+    - name: Install Apache
+      ansible.builtin.package:
+        name: apache2
+        state: present
 
-    - name: Create a file in /home with timestamp
-      ansible.builtin.file:
-        path: "/home/test_{{ timestamp.stdout }}"
-        state: touch
-        mode: '0644'
+    - name: Start and enable Apache
+      ansible.builtin.service:
+        name: apache2
+        state: started
+        enabled: true
