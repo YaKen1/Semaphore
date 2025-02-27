@@ -3,14 +3,14 @@
   become: yes
   tasks:
     - name: Get current timestamp
-      command: date +"%Y_%m_%d_%H"
+      command: date +"%Y_%m_%d_%H_%M"
       register: timestamp
       changed_when: false
 
     - name: Find log files modified in the last hour
       find:
         paths: "/var/log"
-        age: "5m"
+        age: "1h"
         age_stamp: "mtime"
       register: logs_to_backup
 
