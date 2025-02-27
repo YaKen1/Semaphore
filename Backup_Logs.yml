@@ -10,7 +10,7 @@
     - name: Find log files modified in the last hour
       find:
         paths: "/var/log"
-        age: "1h"
+        age: "5m"
         age_stamp: "mtime"
       register: logs_to_backup
 
