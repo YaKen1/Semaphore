@@ -1,0 +1,9 @@
+- name: Install htop
+  become: true
+  ansible.builtin.package:
+    name: htop
+    state: present
+
+- name: Display a message from Install_packages role
+  debug:
+    msg: "Install_packages executed successfully. The server environment is {{ environment }}"
