@@ -1,3 +1,0 @@
-- name: Display a message from Show_Messages role
-  debug:
-    msg: "Hello from Show_Messages! The username is {{ username }}"
