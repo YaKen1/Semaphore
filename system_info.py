@@ -1,21 +1,27 @@
-import os
-import subprocess
+print("System Information:")
+print("-------------------")
 
-# Ensure psutil is installed
-try:
-    import psutil
-except ImportError:
-    print("psutil not found, installing...")
-    subprocess.run(["pip3", "install", "--user", "psutil"], check=True)
-    import psutil  # Try importing again
+# Get the hostname
+hostname = open("/etc/hostname").read().strip()
+print(f"Hostname: {hostname}")
 
-def get_system_info():
-    print("System Information:")
-    print("-------------------")
-    print(f"Hostname: {os.uname().nodename}")
-    print(f"CPU Usage: {psutil.cpu_percent(interval=1)}%")
-    print(f"Memory Usage: {psutil.virtual_memory().percent}%")
-    print(f"Disk Usage: {psutil.disk_usage('/').percent}%")
+# Get the OS information
+os_info = open("/etc/os-release").read().split("\n")[0].replace('NAME=', '').replace('"', '')
+print(f"OS: {os_info}")
 
-if __name__ == "__main__":
-    get_system_info()
+# Get CPU information
+cpu_info = open("/proc/cpuinfo").read().split("\n")[4].split(":")[1].strip()
+print(f"CPU: {cpu_info}")
+
+# Get total memory
+for line in open("/proc/meminfo"):
+    if "MemTotal" in line:
+        mem_total = line.split(":")[1].strip()
+        print(f"Memory: {mem_total}")
+        break
+
+# Get system uptime
+uptime = open("/proc/uptime").read().split()[0]
+uptime_hours = int(float(uptime) // 3600)
+uptime_minutes = int((float(uptime) % 3600) // 60)
+print(f"Uptime: {uptime_hours}h {uptime_minutes}m")
