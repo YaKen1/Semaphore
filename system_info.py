@@ -1,5 +1,13 @@
 import os
-import psutil
+import subprocess
+
+# Ensure psutil is installed
+try:
+    import psutil
+except ImportError:
+    print("psutil not found, installing...")
+    subprocess.run(["pip3", "install", "--user", "psutil"], check=True)
+    import psutil  # Try importing again
 
 def get_system_info():
     print("System Information:")
